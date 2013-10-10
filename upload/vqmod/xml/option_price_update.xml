@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modification>
+	<id>Option Price Update</id>
+	<version>0.1.0</version>
+	<vqmver>2.4.1</vqmver>
+	<author>David http://boopis.com</author>
+
+	<file name="catalog/controller/product/product.php">
+
+		<operation error="skip">
+
+			<search position="before"><![CDATA[
+			$this->data['options'] = array();
+			]]></search>
+
+			<add><![CDATA[
+			$this->data['currency'] = $this->currency->getSymbolLeft();
+			]]></add>
+
+		</operation>
+
+	</file>
+
+	<file name="catalog/view/theme/*/template/product/product.tpl">
+
+		<operation error="skip">
+
+			<search position="replace"><![CDATA[
+			<option value=""><?php echo $text_select; ?></option>
+			]]></search>
+
+			<add><![CDATA[
+			<option data-price="0" value=""><?php echo $text_select; ?></option>
+			]]></add>
+
+		</operation>
+
+		<operation error="skip">
+	
+			<search position="replace"><![CDATA[
+			<option value="<?php echo $option_value['product_option_value_id']; ?>"><?php echo $option_value['name']; ?>
+			]]></search>
+
+			<add><![CDATA[
+			<option data-price="<?php if ($option_value['price']) { echo str_replace($currency, '', $option_value['price']); } else { echo '0'; }; ?>" value="<?php echo $option_value['product_option_value_id']; ?>"><?php echo $option_value['name']; ?>
+			]]></add>
+	
+		</operation>
+
+		<operation error="skip">
+	
+			<search position="replace"><![CDATA[
+			<input type="radio" name="option[<?php echo $option['product_option_id']; ?>]" value="<?php echo $option_value['product_option_value_id']; ?>" id="option-value-<?php echo $option_value['product_option_value_id']; ?>" />
+			]]></search>
+
+			<add><![CDATA[
+			<input type="radio" name="option[<?php echo $option['product_option_id']; ?>]" data-price="<?php if ($option_value['price']) { echo str_replace($currency, '', $option_value['price']); } else { echo '0'; }; ?>" value="<?php echo $option_value['product_option_value_id']; ?>" id="option-value-<?php echo $option_value['product_option_value_id']; ?>" />
+			]]></add>
+	
+		</operation>
+
+		<operation error="skip">
+	
+			<search position="replace"><![CDATA[
+			<input type="checkbox" name="option[<?php echo $option['product_option_id']; ?>][]" value="<?php echo $option_value['product_option_value_id']; ?>" id="option-value-<?php echo $option_value['product_option_value_id']; ?>" />
+			]]></search>
+
+			<add><![CDATA[
+			<input type="checkbox" name="option[<?php echo $option['product_option_id']; ?>][]" data-price="<?php if ($option_value['price']) { echo str_replace($currency, '', $option_value['price']); } else { echo '0'; }; ?>" value="<?php echo $option_value['product_option_value_id']; ?>" id="option-value-<?php echo $option_value['product_option_value_id']; ?>" />
+			]]></add>
+	
+		</operation>
+
+		<operation error="skip">
+	
+			<search position="before"><![CDATA[
+			<?php echo $footer; ?>	
+			]]></search>
+
+			<add><![CDATA[
+			<script>
+$(".options .option").change(function(){
+    sum = <?php echo str_replace($currency, '', $price); ?>;
+    <?php if ($special) { ?>
+    special = <?php echo str_replace($currency, '', $special); ?>;
+    <?php } ?>
+    $(".option select option:selected").each(function() {
+        sum += Number($(this).attr('data-price'));
+        <?php if ($special) { ?>
+        special += Number($(this).attr('data-price'));
+        <?php } ?>
+    });
+    $(".option input:checked").each(function() {
+        sum += Number($(this).attr('data-price'));
+        <?php if ($special) { ?>
+        special += Number($(this).attr('data-price'));
+        <?php } ?>
+    });
+    <?php if (!$special) { ?>
+	$(".right .price").hide().html('<?php echo $text_price; ?> <?php echo $currency; ?>' + sum.toFixed(2)).fadeIn('slow');
+	<?php } else { ?>
+	$(".right .price").hide().html('<?php echo $text_price; ?>' + '<span class="price-old"> <?php echo $currency; ?>' + sum.toFixed(2) + '</span> <span class="price-new"><?php echo $currency; ?>' + special.toFixed(2)).fadeIn('slow');
+	<?php } ?>
+});
+			</script>
+
+
+			]]></add>
+	
+		</operation>
+	
+	</file>
+
+</modification>

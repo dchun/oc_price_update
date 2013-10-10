@@ -1,0 +1,19 @@
+==============================================================================
+Option Price Update
+
+Author: David Chun
+E-mail: daveedchun@gmail.com
+Website: http://boopis.com
+==============================================================================
+
+1. Backup your OpenCart installation, just to be safe.
+
+2. Make sure vQmod is installed. If you do not have vQmod installed, you can
+download it for free from www.vqmod.com
+
+3. Using an FTP application, upload the contents of the "upload" folder to
+the root of your OpenCart installation. No core files are overwritten. For
+further information on how to upload files via FTP, view this forum topic:
+http://forum.opencart.com/viewtopic.php?t=9645
+
+That's it! Enjoy!
